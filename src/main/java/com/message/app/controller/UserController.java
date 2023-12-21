@@ -1,7 +1,7 @@
 package com.message.app.controller;
 
 
-import com.message.app.SecurityConfig;
+import com.message.app.configration.SecurityConfig;
 import com.message.app.dto.UserDto;
 import com.message.app.dto.UserLoginDto;
 import com.message.app.servies.UserService;
@@ -52,4 +52,5 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginResult);
         }
     }
+// Logger and Hard coded responce:LoginSuccessful
 }

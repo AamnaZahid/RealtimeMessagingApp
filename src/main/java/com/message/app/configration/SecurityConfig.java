@@ -1,4 +1,4 @@
-package com.message.app;
+package com.message.app.configration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
