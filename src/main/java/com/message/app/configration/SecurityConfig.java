@@ -15,10 +15,16 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
     public String encode(String password){
+        try
+        {
         BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder(10,new SecureRandom());
 
         return bCryptPasswordEncoder.encode(password);
     }
+        catch (Exception e) {
+        logger.error("Error creating session: {}", e.getMessage());
+    }
+        }
 
 
 }

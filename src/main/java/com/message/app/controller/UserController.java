@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class UserController {
+    private static final Logger logger = (Logger) LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private SecurityConfig securityConfig;
@@ -23,34 +24,25 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(value = "/add")
+    @PostMapping(value = Constant.ADD_PATH)
     public String registerUser(@RequestBody UserDto userDto) {
-        System.out.println(userDto.toString());
+        logger.info(userDto.toString());
         return userService.register(userDto);
     }
-    @PostMapping(value = "/test")
-    public void test(@RequestParam String p1, @RequestParam String p2)
-    {
-        String pass1 = securityConfig.encode(p1);
-        String pass2 = securityConfig.encode(p2);
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
-        if(encoder.matches(p1 , pass2 )){
-            System.out.println("Password Matched");
-        }
-        else {
-            System.out.println("Invalid Password");
-        }
-    }
 
-    @PostMapping("/login")
+    @PostMapping(value = Constant.LOGIN_PATH)
     public ResponseEntity<String> loginUser(@RequestBody UserLoginDto loginDto) {
-        String loginResult = userService.login(loginDto);
-        if (loginResult.equals("Login Successful!")) {
-            return ResponseEntity.ok(loginResult);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginResult);
+        try {
+            String loginResult = userService.login(loginDto);
+            if (loginResult.equals(Constant.SUCCESS)) {
+                return ResponseEntity.ok(loginResult);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginResult);
+            } }
+        catch (Exception e) {
+            logger.error("Error creating session: {}", e.getMessage());
         }
     }
-// Logger and Hard coded responce:LoginSuccessful
+// Hard coded responce:LoginSuccessful
 }

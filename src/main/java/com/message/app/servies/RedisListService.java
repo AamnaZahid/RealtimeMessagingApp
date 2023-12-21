@@ -14,7 +14,6 @@ public class RedisListService {
     public RedisListService(RedisTemplate<String, String> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
-
     public void pushDataToList(String key, String value) {
         ListOperations<String, String> listOps = redisTemplate.opsForList();
         listOps.leftPush(key, value);

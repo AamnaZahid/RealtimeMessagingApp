@@ -31,21 +31,26 @@ public class UserService {
     private static final Logger logger = (Logger) LoggerFactory.getLogger(UserService.class);
 
     public String register(UserDto userDto) {
+        try {
+            if (userRepository.existsByEmail(userDto.getEmail())) {
+                return "Email already exists. Please use a different email.";
+            }
+            User user = new User();
 
-        if (userRepository.existsByEmail(userDto.getEmail())) {
-            return "Email already exists. Please use a different email.";
+            String password = securityConfig.encode(userDto.getPassword());
+            System.out.println(password);
+            user.setUserName(userDto.getUserName());
+            user.setEmail(userDto.getEmail());
+            user.setPassword(password);
+            userRepository.save(user);
+            return Constant.REGISTERED;
         }
-        User user = new User();
-
-        String password=securityConfig.encode(userDto.getPassword());
-        System.out.println(password);
-        user.setUserName(userDto.getUserName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(password);
-        userRepository.save(user);
-        return "User Registered!";
+        catch (Exception e) {
+            logger.error("Error creating session: {}", e.getMessage());
+        }
     }
 
+}
 
     public String login(UserLoginDto loginDto) {
         User user = userRepository.findByEmail(loginDto.getEmail());
@@ -56,11 +61,11 @@ public class UserService {
                 String sessionData = "User: " + loginDto.getEmail();
                 redisListService.pushDataToList("user:sessions:" + session.getId(), sessionData);
                 logger.info("Session created and data pushed to Redis for user: {}", loginDto.getEmail());
-                System.out.println("Session ID: " + session.getId());
-                response = "Login Successful and Session Created!";
+                logger.info("Session ID: " + session.getId());
+                response = Constant.SUCCESS;
             } catch (Exception e) {
                 logger.error("Error creating session: {}", e.getMessage());
-                response = "An error occurred during login. Please try again later.";
+                response = Constant.FAILED3;
             }
         }
     return response;
