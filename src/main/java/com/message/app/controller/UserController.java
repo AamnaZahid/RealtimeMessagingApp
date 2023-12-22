@@ -5,13 +5,14 @@ import com.message.app.configration.SecurityConfig;
 import com.message.app.dto.UserDto;
 import com.message.app.dto.UserLoginDto;
 import com.message.app.servies.UserService;
+import com.message.app.util.Constant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -33,16 +34,21 @@ public class UserController {
 
     @PostMapping(value = Constant.LOGIN_PATH)
     public ResponseEntity<String> loginUser(@RequestBody UserLoginDto loginDto) {
+        ResponseEntity<String> response = null;
         try {
             String loginResult = userService.login(loginDto);
             if (loginResult.equals(Constant.SUCCESS)) {
-                return ResponseEntity.ok(loginResult);
+                response = ResponseEntity.ok(loginResult);
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginResult);
-            } }
-        catch (Exception e) {
+                response = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginResult);
+
+            }
+        } catch (Exception e) {
             logger.error("Error creating session: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while processing the login request.");
         }
+        return response;
     }
-// Hard coded responce:LoginSuccessful
+
 }
