@@ -1,4 +1,4 @@
-package com.message.app.model;
+package com.message.app.domain;
 
 
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "user")
-public class User {
+public class UserDomain {
     @Id
     private String userId;
     private String userName;

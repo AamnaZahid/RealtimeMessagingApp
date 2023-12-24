@@ -25,10 +25,7 @@ public class SecurityConfig {
             bCryptPasswordEncoder = new BCryptPasswordEncoder(10, new SecureRandom());
         } catch (Exception e) {
             logger.error("Error creating session: {}", e.getMessage());
-
         }
         return bCryptPasswordEncoder.encode(password);
     }
-
-
 }
