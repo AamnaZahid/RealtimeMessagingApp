@@ -14,5 +14,4 @@ public class UserDto {
     String userName;
     String email;
     String password;
-
 }
